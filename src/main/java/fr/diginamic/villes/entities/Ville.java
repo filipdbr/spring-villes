@@ -4,16 +4,32 @@ package fr.diginamic.villes.entities;
 public class Ville {
 
     // Attributs
+    // Unique id
+    private int id;
+    // Global counter of all instances. The first instance is 1.
+    private static int idCounter = 1;
     private String nom;
     private int nbHabitatants;
 
     // Constructeur
     public Ville(String nom, int nbHabitatants) {
+        // Increment the global counter for each new instance
+        // Assign the unique Id to each new instance
+        this.id = idCounter++;
         this.nom = nom;
         this.nbHabitatants = nbHabitatants;
     }
 
     // Méthodes
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getNom() {
         return nom;
     }
