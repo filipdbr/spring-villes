@@ -2,6 +2,7 @@ package fr.diginamic.villes.webservice;
 
 import fr.diginamic.villes.entities.Ville;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,10 +49,18 @@ public class VilleControleur {
 
     @PostMapping
     public ResponseEntity<String> addVille(@RequestBody Ville newVille) {
+        // Loop looking for a city with the same name.
+        // As we use autoincrement, I can't compare the whole objects as they will always differ.
+        for (Ville ville : villes) {
+            if (ville.getNom().equals(newVille.getNom())) {
+                // If there is a city with the same name, there following response is generated.
+                return new ResponseEntity<>("La ville existe déjà", HttpStatus.BAD_REQUEST);
+            }
+        }
         // Add the city to the list of cities.
         villes.add(newVille);
         // Return obligatory response in order that the code compile
-        return new ResponseEntity<>("Ville ajoutée à la base de données", HttpStatus.CREATED);
+        return new ResponseEntity<>("Ville insérée avec succès", HttpStatus.OK);
     }
 
 }
