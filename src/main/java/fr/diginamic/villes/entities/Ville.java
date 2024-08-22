@@ -9,15 +9,15 @@ public class Ville {
     // Global counter of all instances. The first instance is 1.
     private static int idCounter = 1;
     private String nom;
-    private int nbHabitatants;
+    private int nbHabitants;
 
     // Constructeur
-    public Ville(String nom, int nbHabitatants) {
+    public Ville(String nom, int nbHabitants) {
         // Increment the global counter for each new instance
         // Assign the unique Id to each new instance
         this.id = idCounter++;
         this.nom = nom;
-        this.nbHabitatants = nbHabitatants;
+        this.nbHabitants = nbHabitants;
     }
 
     // Méthodes
@@ -39,11 +39,11 @@ public class Ville {
     }
 
     public int getNbHabitatants() {
-        return nbHabitatants;
+        return nbHabitants;
     }
 
     public void setNbHabitatants(int nbHabitatants) {
-        this.nbHabitatants = nbHabitatants;
+        this.nbHabitants = nbHabitatants;
     }
 
     // Override of the toString method
@@ -51,7 +51,7 @@ public class Ville {
     public String toString() {
         return "Ville{" +
                 "nom='" + nom + '\'' +
-                ", nbHabitatants=" + nbHabitatants +
+                ", nbHabitants=" + nbHabitants +
                 '}';
     }
 

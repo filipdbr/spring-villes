@@ -2,7 +2,6 @@ package fr.diginamic.villes.webservice;
 
 import fr.diginamic.villes.entities.Ville;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +46,7 @@ public class VilleControleur {
         return null;
     }
 
+    // Creates a city in the DB
     @PostMapping
     public ResponseEntity<String> addVille(@RequestBody Ville newVille) {
         // Loop looking for a city with the same name.
@@ -60,7 +60,42 @@ public class VilleControleur {
         // Add the city to the list of cities.
         villes.add(newVille);
         // Return obligatory response in order that the code compile
-        return new ResponseEntity<>("Ville insérée avec succès", HttpStatus.OK);
+        return new ResponseEntity<>("La ville insérée avec succès", HttpStatus.OK);
     }
+
+    // Updates a city in the DB
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateVille(@PathVariable Integer id, @RequestBody Ville newVille) {
+        // Loop through the list of cities to find the city with the matching ID
+        for (Ville ville : villes) {
+            // If a city with the given ID is found
+            if (ville.getId() == id) {
+                // Update the city's name and number of inhabitants with the values from the newVille object
+                ville.setNom(newVille.getNom());
+                ville.setNbHabitatants(newVille.getNbHabitatants());
+                // Return a success message with HTTP status 200 (OK)
+                return new ResponseEntity<>("La ville a été mise à jour avec succès", HttpStatus.OK);
+            }
+        }
+        // If no city with the given ID is found, return a 404 (Not Found) status with an error message
+        return new ResponseEntity<>("Il n'y a pas de ville avec un tel identifiant dans la base de données", HttpStatus.NOT_FOUND);
+    }
+
+    // Deletes the city from the DB
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteVille(@PathVariable Integer id) {
+        // Loop through the list of cities to find the city with the matching ID
+        for (Ville ville : villes) {
+            // If a city with the given ID is found
+            if (ville.getId() == id) {
+                // City is removed and the proper response is shown
+                villes.remove(ville);
+                return new ResponseEntity<>(ville.getNom() + " a été supprimée", HttpStatus.OK);
+            }
+        }
+        // Response if case of no match
+        return new ResponseEntity<>("Il n'y a pas de ville avec un tel identifiant dans la base de données", HttpStatus.NOT_FOUND);
+    }
+
 
 }
