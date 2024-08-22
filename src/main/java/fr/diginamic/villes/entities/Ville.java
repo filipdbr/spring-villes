@@ -1,21 +1,35 @@
 package fr.diginamic.villes.entities;
 
-// POJO ville (cities)
+import jakarta.persistence.*;
+
+// Marked the class as entity in JPA
+// Added a name for the table which was optional
+@Entity
+@Table(name="ville")
 public class Ville {
 
     // Attributs
-    // Unique id
+    // Id will be unique due to GeneratedValue strategy set to auto
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID")
     private int id;
-    // Global counter of all instances. The first instance is 1.
-    private static int idCounter = 1;
+
+    @Column(name="NOM")
     private String nom;
+
+    @Column(name="NB_HABITANTS")
     private int nbHabitants;
+
+    // Contructeur vide pour JPA
+    public Ville() {
+
+    }
 
     // Constructeur
     public Ville(String nom, int nbHabitants) {
         // Increment the global counter for each new instance
         // Assign the unique Id to each new instance
-        this.id = idCounter++;
         this.nom = nom;
         this.nbHabitants = nbHabitants;
     }
@@ -38,12 +52,12 @@ public class Ville {
         this.nom = nom;
     }
 
-    public int getNbHabitatants() {
+    public int getNbHabitants() {
         return nbHabitants;
     }
 
-    public void setNbHabitatants(int nbHabitatants) {
-        this.nbHabitants = nbHabitatants;
+    public void setNbHabitants(int nbHabitants) {
+        this.nbHabitants = nbHabitants;
     }
 
     // Override of the toString method
