@@ -12,14 +12,18 @@ public class Ville {
     // Id will be unique due to GeneratedValue strategy set to auto
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ID")
+    @Column(name="id")
     private int id;
 
-    @Column(name="NOM")
+    @Column(name="nom")
     private String nom;
 
-    @Column(name="NB_HABITANTS")
+    @Column(name="nb_habitants")
     private int nbHabitants;
+
+    @ManyToOne
+    @JoinColumn(name="id_departement")
+    private Departement departement;
 
     // Contructeur vide pour JPA
     public Ville() {
@@ -27,11 +31,12 @@ public class Ville {
     }
 
     // Constructeur
-    public Ville(String nom, int nbHabitants) {
+    public Ville(String nom, int nbHabitants, Departement departement) {
         // Increment the global counter for each new instance
         // Assign the unique Id to each new instance
         this.nom = nom;
         this.nbHabitants = nbHabitants;
+        this.departement = departement;
     }
 
     // Méthodes
