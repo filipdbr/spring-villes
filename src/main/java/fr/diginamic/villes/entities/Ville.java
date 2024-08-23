@@ -19,7 +19,7 @@ public class Ville {
     private String nom;
 
     @Column(name="nb_habitants")
-    private int nbHabitants;
+    private long nbHabitants;
 
     @ManyToOne
     @JoinColumn(name="code_departement")
@@ -57,11 +57,11 @@ public class Ville {
         this.nom = nom;
     }
 
-    public int getNbHabitants() {
+    public long getNbHabitants() {
         return nbHabitants;
     }
 
-    public void setNbHabitants(int nbHabitants) {
+    public void setNbHabitants(long nbHabitants) {
         this.nbHabitants = nbHabitants;
     }
 

@@ -4,7 +4,11 @@ import fr.diginamic.villes.entities.Ville;
 import fr.diginamic.villes.interfaces.VilleRepository;
 import fr.diginamic.villes.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // Rest controller returns an object or a list of objects in form of a JSON
 // This will work with a URL finishing with /villes
@@ -38,6 +42,37 @@ public class VilleControleur {
     @GetMapping("/search")
     public Ville getVilleNom(@RequestParam String nom) {
         return villeService.chercherNom(nom);
+    }
+
+    // find cities by the first letter of its name.
+    @GetMapping("/search/by/letter")
+    public Iterable<Ville> getVillesByLetter(@RequestParam char firstLetter) {
+        return villeRepository.findByNomStartsWith(firstLetter);
+    }
+
+    // find cities by its population
+    @GetMapping("/search/by/population")
+    public Iterable<Ville> getVillesByPopulation(@RequestParam long minPopulation) {
+        return villeRepository.findByNbHabitantsGreaterThan(minPopulation);
+    }
+
+    // find cities by its department and population
+    @GetMapping("/search/by/departement")
+    public Iterable<Ville> getVillesByDepartment(@RequestParam int codeDepartement, @RequestParam long population) {
+        return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsGreaterThan(codeDepartement, population);
+    }
+
+    // find cities with population between
+    @GetMapping("/search/by/population/between")
+    public Iterable<Ville> getVillesByPopulationBetween(@RequestParam Integer codeDepartement, @RequestParam long minPopulation, @RequestParam long maxPopulation) {
+        return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsBetween(codeDepartement, minPopulation, maxPopulation);
+    }
+
+    // find top n cities in the region in terms of population
+    @GetMapping("/search/population/top")
+    public List<Ville> getVillesTopPopulation(@RequestParam int codeDepartement, @RequestParam int n) {
+        Pageable pageable = PageRequest.of(0, n); // Get the top 'n' results
+        return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeDepartement, pageable);
     }
 
     // Creates a city in the DB
