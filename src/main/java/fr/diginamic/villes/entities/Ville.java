@@ -22,7 +22,7 @@ public class Ville {
     private int nbHabitants;
 
     @ManyToOne
-    @JoinColumn(name="id_departement")
+    @JoinColumn(name="code_departement")
     private Departement departement;
 
     // Contructeur vide pour JPA

@@ -12,8 +12,8 @@ public class Departement {
     // Primary key with auto-increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Integer id;
+    @Column(name="code_departement")
+    private Integer codeDepartement;
 
     // Column for department name
     @Column(name="nom_departement")
@@ -35,11 +35,11 @@ public class Departement {
 
     // Getters and setters for id
     public Integer getId() {
-        return id;
+        return codeDepartement;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.codeDepartement = id;
     }
 
     // Getters and setters for department name
@@ -64,7 +64,7 @@ public class Departement {
     @Override
     public String toString() {
         return "Departement{" +
-                "id=" + id +
+                "codeDepartement=" + codeDepartement +
                 ", nomDepartement='" + nomDepartement + '\'' +
                 ", villes=" + villes +
                 '}';
