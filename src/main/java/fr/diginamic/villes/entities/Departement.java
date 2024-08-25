@@ -1,5 +1,6 @@
 package fr.diginamic.villes.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,9 @@ public class Departement {
     private String nomDepartement;
 
     // One-to-many relationship with Ville, mapped by the 'departement' field in Ville
-    @OneToMany(mappedBy = "departement")
+    // Setting a cascade in order that cities are updated alongside with the department
+    @OneToMany(mappedBy = "departement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Ville> villes;
 
     // Default constructor
@@ -58,6 +61,10 @@ public class Departement {
 
     public void setVilles(Set<Ville> villes) {
         this.villes = villes;
+    }
+
+    public void addVille(Ville ville) {
+        this.villes.add(ville);
     }
 
     // Override toString method for better object representation

@@ -2,7 +2,11 @@ package fr.diginamic.villes.webservice;
 
 import fr.diginamic.villes.entities.Departement;
 import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.interfaces.DepartementRepository;
+import fr.diginamic.villes.interfaces.VilleRepository;
 import fr.diginamic.villes.services.DepartementService;
+import fr.diginamic.villes.services.VilleService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,46 +16,49 @@ import java.util.List;
 public class DepartementContoleur {
 
     private final DepartementService departementService;
+    private final DepartementRepository departementRepository;
+    private final VilleRepository villeRepository;
 
     // Constructor injection for DepartementService
-    public DepartementContoleur(DepartementService departementService) {
+    public DepartementContoleur(DepartementService departementService, DepartementRepository departementRepository, VilleService villeService, VilleRepository villeRepository) {
         this.departementService = departementService;
+        this.departementRepository = departementRepository;
+        this.villeRepository = villeRepository;
     }
 
-    // Get all departments
+    // Get all departments (READ)
     @GetMapping
-    public List<Departement> getDepartments() {
-        return departementService.extractDepartements();
+    public Iterable<Departement> getDepartments() {
+        return departementRepository.findAll();
     }
 
-    // Get top N cities in a department by population
-    @GetMapping("/{id}/top/{n}")
-    public List<Ville> departementTop(@PathVariable int id, @PathVariable int n) {
-        return departementService.getTopNVilles(id, n);
-    }
-
-    // Get cities within a population range in a department
-    @GetMapping("/region/{dep_id}/population")
-    public List<Ville> departementPopulation(@PathVariable int dep_id, @RequestParam int min, @RequestParam int max) {
-        return departementService.getVillesByPopulationRange(dep_id, min, max);
-    }
-
-    // Create a new department
+    // Create a department (CREATE)
     @PostMapping
-    public List<Departement> createDepartement(@RequestBody Departement departement) {
-        return departementService.insertDepartement(departement);
+    public void createDepartement(@RequestBody Departement departement) {
+        departementRepository.save(departement);
     }
 
-    // Update an existing department by id
-    @PutMapping("/{id}")
-    public List<Departement> updateDepartement(@PathVariable int id, @RequestBody Departement departement) {
-        return departementService.updateDepartement(id, departement);
+    // Updates a department (UPDATE)
+    @PutMapping("/update")
+    public void updateDepartement(@RequestParam int id, @RequestBody Departement departement) {
+        departementService.updateDepartement(id, departement);
     }
 
-    // Delete a department by id
-    @DeleteMapping("/{id}")
-    public List<Departement> deleteDepartement(@PathVariable int id) {
-        return departementService.deleteDepartement(id);
+    // Deletes a departement (DELETE)
+    @DeleteMapping
+    public void deleteDepartement(@RequestParam int id) {
+        departementRepository.deleteById(id);
+    }
+
+    // get n largest cities in the department
+    @GetMapping("/{codeRegion}/villes/top/{n}")
+    public List<Ville> getTopNCities(@PathVariable int codeRegion, @PathVariable int n) {
+        return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeRegion, Pageable.ofSize(n));
+    }
+
+    @GetMapping("/{codeRegion/villes")
+    public Iterable<Ville> getCitiesBetween(@PathVariable int codeRegion, @RequestParam int min, @RequestParam int max) {
+        return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsBetween(codeRegion, min, max);
     }
 
 }

@@ -1,5 +1,6 @@
 package fr.diginamic.villes.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 // Marked the class as entity in JPA
@@ -23,6 +24,7 @@ public class Ville {
 
     @ManyToOne
     @JoinColumn(name="code_departement")
+    @JsonBackReference
     private Departement departement;
 
     // Contructeur vide pour JPA
@@ -63,6 +65,14 @@ public class Ville {
 
     public void setNbHabitants(long nbHabitants) {
         this.nbHabitants = nbHabitants;
+    }
+
+    public Departement getDepartement() {
+        return departement;
+    }
+
+    public void setDepartement(Departement departement) {
+        this.departement = departement;
     }
 
     // Override of the toString method
