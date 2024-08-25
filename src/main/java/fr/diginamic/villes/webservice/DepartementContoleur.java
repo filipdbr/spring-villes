@@ -56,7 +56,7 @@ public class DepartementContoleur {
         return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeRegion, Pageable.ofSize(n));
     }
 
-    @GetMapping("/{codeRegion/villes")
+    @GetMapping("/{codeRegion}/villes")
     public Iterable<Ville> getCitiesBetween(@PathVariable int codeRegion, @RequestParam int min, @RequestParam int max) {
         return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsBetween(codeRegion, min, max);
     }

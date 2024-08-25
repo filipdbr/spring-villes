@@ -23,7 +23,7 @@ public class Ville {
     private long nbHabitants;
 
     @ManyToOne
-    @JoinColumn(name="code_departement")
+    @JoinColumn(name="code_departement", nullable = false)
     @JsonBackReference
     private Departement departement;
 

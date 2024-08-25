@@ -1,11 +1,16 @@
 package fr.diginamic.villes.webservice;
 
+import fr.diginamic.villes.entities.Departement;
 import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.interfaces.DepartementRepository;
 import fr.diginamic.villes.interfaces.VilleRepository;
 import fr.diginamic.villes.services.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +25,8 @@ public class VilleControleur {
     private VilleService villeService;
     @Autowired
     private VilleRepository villeRepository;
+    @Autowired
+    private DepartementRepository departementRepository;
 
     // GET method to retrieve the full list of cities.
     // This method is mapped to the "/villes" URL and returns a list of Ville objects
@@ -77,8 +84,33 @@ public class VilleControleur {
 
     // Creates a city in the DB
     @PostMapping
-    public Ville creerVille(@RequestBody Ville ville) {
-        return villeRepository.save(ville);
+    public ResponseEntity<?> createVille(@RequestBody Ville ville) {
+
+        // Check if the department is provided
+        Departement departement = ville.getDepartement();
+        if (departement == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department must be provided.");
+        }
+
+        // Check if the department has a name
+        if (departement.getNomDepartement() == null || departement.getNomDepartement().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department name must be provided.");
+        }
+
+        // Check if the department already exists in the database
+        Departement existingDepartement = departementRepository.findByNomDepartement(departement.getNomDepartement());
+        if (existingDepartement != null) {
+            // If the department exists, associate the city with the existing department
+            ville.setDepartement(existingDepartement);
+        } else {
+            // If the department doesn't exist, create it
+            departementRepository.save(departement);
+        }
+
+        // Save the city with the associated department
+        villeRepository.save(ville);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ville);
     }
 
     // Updates a city in the DB
