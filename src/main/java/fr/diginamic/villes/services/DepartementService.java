@@ -1,7 +1,7 @@
 package fr.diginamic.villes.services;
 
-import fr.diginamic.villes.entities.Departement;
-import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.model.Departement;
+import fr.diginamic.villes.model.Ville;
 import fr.diginamic.villes.interfaces.DepartementRepository;
 import org.springframework.stereotype.Service;
 

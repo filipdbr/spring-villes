@@ -1,6 +1,6 @@
 package fr.diginamic.villes.interfaces;
 
-import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.model.Ville;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.domain.Pageable;
 

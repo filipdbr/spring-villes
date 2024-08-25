@@ -1,6 +1,6 @@
 package fr.diginamic.villes.services;
 
-import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.model.Ville;
 import fr.diginamic.villes.interfaces.VilleRepository;
 import org.springframework.stereotype.Service;
 

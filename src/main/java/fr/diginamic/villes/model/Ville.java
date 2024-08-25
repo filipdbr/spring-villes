@@ -1,4 +1,4 @@
-package fr.diginamic.villes.entities;
+package fr.diginamic.villes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

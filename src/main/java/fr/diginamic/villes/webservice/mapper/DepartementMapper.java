@@ -1,7 +1,7 @@
 package fr.diginamic.villes.webservice.mapper;
 
-import fr.diginamic.villes.entities.Departement;
-import fr.diginamic.villes.entities.Ville;
+import fr.diginamic.villes.model.Departement;
+import fr.diginamic.villes.model.Ville;
 import fr.diginamic.villes.webservice.dto.DepartementDto;
 
 
