@@ -1,4 +1,4 @@
-package fr.diginamic.villes.webservice.dto;
+package fr.diginamic.villes.dto;
 
 public class VilleDto {
 

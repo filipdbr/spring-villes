@@ -1,4 +1,4 @@
-package fr.diginamic.villes.interfaces;
+package fr.diginamic.villes.repository;
 
 import fr.diginamic.villes.model.Ville;
 import org.springframework.data.repository.CrudRepository;

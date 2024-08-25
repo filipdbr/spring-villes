@@ -1,8 +1,8 @@
-package fr.diginamic.villes.webservice.mapper;
+package fr.diginamic.villes.mapper;
 
 import fr.diginamic.villes.model.Departement;
 import fr.diginamic.villes.model.Ville;
-import fr.diginamic.villes.webservice.dto.DepartementDto;
+import fr.diginamic.villes.dto.DepartementDto;
 
 
 public class DepartementMapper {

@@ -1,8 +1,8 @@
-package fr.diginamic.villes.webservice.mapper;
+package fr.diginamic.villes.mapper;
 
 import fr.diginamic.villes.model.Ville;
-import fr.diginamic.villes.webservice.dto.DepartementDto;
-import fr.diginamic.villes.webservice.dto.VilleDto;
+import fr.diginamic.villes.dto.DepartementDto;
+import fr.diginamic.villes.dto.VilleDto;
 
 public class VilleMapper {
 
@@ -34,7 +34,7 @@ public class VilleMapper {
      * @param departementDto The associated DepartementDto.
      * @return Ville The entity version of VilleDto.
      */
-    public Ville toBean(VilleDto villeDto, DepartementDto departementDto) {
+    public static Ville toBean(VilleDto villeDto, DepartementDto departementDto) {
         Ville ville = new Ville();
         ville.setId(villeDto.getCodeVille());
         ville.setNbHabitants(villeDto.getNbHabitants());

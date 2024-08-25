@@ -1,28 +1,28 @@
-package fr.diginamic.villes.webservice.dto;
+package fr.diginamic.villes.dto;
 
 public class DepartementDto {
 
     // attributs given in the task
 
-    private Integer codeDepartement;
-    private String nomDepartement;
+    private String codeDepartement;
+    private Integer nomDepartement;
     private long nbHabitants;
 
     // getters and setters
 
-    public Integer getCodeDepartement() {
+    public String getCodeDepartement() {
         return codeDepartement;
     }
 
-    public void setCodeDepartement(Integer codeDepartement) {
+    public void setCodeDepartement(String codeDepartement) {
         this.codeDepartement = codeDepartement;
     }
 
-    public String getNomDepartement() {
+    public Integer getNomDepartement() {
         return nomDepartement;
     }
 
-    public void setNomDepartement(String nomDepartement) {
+    public void setNomDepartement(Integer nomDepartement) {
         this.nomDepartement = nomDepartement;
     }
 

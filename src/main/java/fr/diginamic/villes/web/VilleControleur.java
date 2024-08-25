@@ -1,10 +1,15 @@
-package fr.diginamic.villes.webservice;
+package fr.diginamic.villes.web;
 
+import fr.diginamic.villes.dto.DepartementDto;
+import fr.diginamic.villes.dto.VilleDto;
+import fr.diginamic.villes.exception.InvalidVilleException;
+import fr.diginamic.villes.mapper.DepartementMapper;
+import fr.diginamic.villes.mapper.VilleMapper;
 import fr.diginamic.villes.model.Departement;
 import fr.diginamic.villes.model.Ville;
-import fr.diginamic.villes.interfaces.DepartementRepository;
-import fr.diginamic.villes.interfaces.VilleRepository;
-import fr.diginamic.villes.services.VilleService;
+import fr.diginamic.villes.repository.DepartementRepository;
+import fr.diginamic.villes.repository.VilleRepository;
+import fr.diginamic.villes.service.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -83,33 +88,25 @@ public class VilleControleur {
 
     // Creates a city in the DB
     @PostMapping
-    public ResponseEntity<?> createVille(@RequestBody Ville ville) {
+    public ResponseEntity<?> creerVille(@RequestBody VilleDto villeDto) throws InvalidVilleException {
+        // Finding the department by its identifier (codeDepartement)
+        Departement departement = departementRepository.findById(villeDto.getCodeDepartement())
+                .orElseThrow(() -> new InvalidVilleException("Le département n'existe pas."));
 
-        // Check if the department is provided
-        Departement departement = ville.getDepartement();
-        if (departement == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department must be provided.");
-        }
+        // Mapping the Departement object to DepartementDto to use it for creating Ville
+        DepartementDto departementDto = DepartementMapper.toDto(departement);
 
-        // Check if the department has a name
-        if (departement.getNomDepartement() == null || departement.getNomDepartement().trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department name must be provided.");
-        }
+        // Creating a new Ville object from VilleDto and the mapped department
+        Ville ville = VilleMapper.toBean(villeDto, departementDto);
 
-        // Check if the department already exists in the database
-        Departement existingDepartement = departementRepository.findByNomDepartement(departement.getNomDepartement());
-        if (existingDepartement != null) {
-            // If the department exists, associate the city with the existing department
-            ville.setDepartement(existingDepartement);
-        } else {
-            // If the department doesn't exist, create it
-            departementRepository.save(departement);
-        }
+        // Validating the city's data
+        villeService.validateVille(ville, departement);
 
-        // Save the city with the associated department
+        // Saving the city in the database
         villeRepository.save(ville);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ville);
+        // Returning a response with CREATED status and confirmation message
+        return ResponseEntity.status(HttpStatus.CREATED).body("La ville a été créée avec succès.");
     }
 
     // Updates a city in the DB
