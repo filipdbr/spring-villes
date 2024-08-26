@@ -8,6 +8,7 @@ public class VilleDto {
     private long nbHabitants;
     private String codeDepartement;
     private String nomDepartement;
+    private String nom;
 
     // getters and setters
 
@@ -42,4 +43,8 @@ public class VilleDto {
     public void setNomDepartement(String nomDepartement) {
         this.nomDepartement = nomDepartement;
     }
+
+    public String getNom() { return nom; }
+
+    public void setNom(String nom) { this.nom = nom; }
 }
