@@ -15,7 +15,7 @@ public class DepartementMapper {
      */
     public static DepartementDto toDto(Departement departement) {
         DepartementDto departementDto = new DepartementDto();
-        departementDto.setCodeDepartement(departement.getId());
+        departementDto.setCodeDepartement(departement.getCodeDepartement());
         departementDto.setNomDepartement(departement.getNomDepartement());
         departementDto.setNbHabitants(departement.getVilles().stream().mapToLong(Ville::getNbHabitants).sum());
         return departementDto;
@@ -29,7 +29,7 @@ public class DepartementMapper {
      */
     public static Departement toBean(DepartementDto departementDto) {
         Departement departement = new Departement();
-        departement.setId(departementDto.getCodeDepartement());
+        departement.setCodeDepartement(departementDto.getCodeDepartement());
         departement.setNomDepartement(departementDto.getNomDepartement());
         return departement;
     }

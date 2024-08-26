@@ -13,12 +13,14 @@ public class Departement {
     // Primary key with auto-increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     @Column(name="code_departement")
     private String codeDepartement;
 
     // Column for department name
     @Column(name="nom_departement")
-    private Integer nomDepartement;
+    private String nomDepartement;
 
     // One-to-many relationship with Ville, mapped by the 'departement' field in Ville
     // Setting a cascade in order that cities are updated alongside with the department
@@ -31,26 +33,35 @@ public class Departement {
     }
 
     // Constructor with department name initialization
-    public Departement(Integer nomDepartement) {
+    public Departement(String nomDepartement) {
         this.nomDepartement = nomDepartement;
         this.villes = new HashSet<Ville>(); // Initializes the set of cities
     }
 
-    // Getters and setters for id
-    public String getId() {
+    // Getters and setters for codeDepartement
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCodeDepartement() {
         return codeDepartement;
     }
 
-    public void setId(String id) {
-        this.codeDepartement = id;
+    public void setCodeDepartement(String codeDepartement) {
+        this.codeDepartement = codeDepartement;
     }
 
     // Getters and setters for department name
-    public Integer getNomDepartement() {
+    public String getNomDepartement() {
         return nomDepartement;
     }
 
-    public void setNomDepartement(Integer nomDepartement) {
+    public void setNomDepartement(String nomDepartement) {
         this.nomDepartement = nomDepartement;
     }
 

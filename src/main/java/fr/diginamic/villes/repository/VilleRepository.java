@@ -18,12 +18,12 @@ public interface VilleRepository  extends CrudRepository<Ville, Integer> {
     Iterable<Ville> findByNbHabitantsGreaterThan(long nbHabitants);
 
     // finds all cities in department with population higher then
-    Iterable<Ville> findByDepartement_CodeDepartementAndNbHabitantsGreaterThan(Integer codeDepartement, long nbHabitants);
+    Iterable<Ville> findByDepartement_CodeDepartementAndNbHabitantsGreaterThan(String codeDepartement, long nbHabitants);
 
     // Recherche de toutes les villes d’un département dont la population est supérieure à min et inférieure à max.
-    Iterable<Ville> findByDepartement_CodeDepartementAndNbHabitantsBetween(int codeDepartementA, long minNbHabitants, long maxNbHabitants);
+    Iterable<Ville> findByDepartement_CodeDepartementAndNbHabitantsBetween(String codeDepartementA, long minNbHabitants, long maxNbHabitants);
 
     // Recherche des n villes les plus peuplées d’un département donné (n est aussi un paramètre)
-    List<Ville> findByDepartement_CodeDepartementOrderByNbHabitantsDesc(int codeDepartement, Pageable pageable);
+    List<Ville> findByDepartement_CodeDepartementOrderByNbHabitantsDesc(String codeDepartement, Pageable pageable);
 
 }

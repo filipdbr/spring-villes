@@ -69,19 +69,19 @@ public class VilleControleur {
 
     // find cities by its department and population
     @GetMapping("/search/by/departement")
-    public Iterable<Ville> getVillesByDepartment(@RequestParam int codeDepartement, @RequestParam long population) {
+    public Iterable<Ville> getVillesByDepartment(@RequestParam String codeDepartement, @RequestParam long population) {
         return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsGreaterThan(codeDepartement, population);
     }
 
     // find cities with population between
     @GetMapping("/search/by/population/between")
-    public Iterable<Ville> getVillesByPopulationBetween(@RequestParam Integer codeDepartement, @RequestParam long minPopulation, @RequestParam long maxPopulation) {
+    public Iterable<Ville> getVillesByPopulationBetween(@RequestParam String codeDepartement, @RequestParam long minPopulation, @RequestParam long maxPopulation) {
         return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsBetween(codeDepartement, minPopulation, maxPopulation);
     }
 
     // find top n cities in the region in terms of population
     @GetMapping("/search/population/top")
-    public List<Ville> getVillesTopPopulation(@RequestParam int codeDepartement, @RequestParam int n) {
+    public List<Ville> getVillesTopPopulation(@RequestParam String codeDepartement, @RequestParam int n) {
         Pageable pageable = PageRequest.of(0, n); // Get the top 'n' results
         return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeDepartement, pageable);
     }
@@ -110,9 +110,28 @@ public class VilleControleur {
     }
 
     // Updates a city in the DB
-    @PutMapping
-    public Ville updateVille(@RequestParam Integer id, @RequestBody Ville ville) {
-        return villeService.updateVille(id, ville);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateVille(@PathVariable Integer id, @RequestBody VilleDto villeDto) throws InvalidVilleException {
+        // Find the existing city by its ID
+        Ville existingVille = villeRepository.findById(id)
+                .orElseThrow(() -> new InvalidVilleException("La ville n'existe pas."));
+
+        // Find the department by its ID (codeDepartement) from the VilleDto
+        Departement departement = departementRepository.findById(villeDto.getCodeDepartement())
+                .orElseThrow(() -> new InvalidVilleException("Le département n'existe pas."));
+
+        // Map the VilleDto to Ville entity and update the existing city
+        existingVille.setNbHabitants(villeDto.getNbHabitants());
+        existingVille.setDepartement(departement); // Update the department reference
+
+        // Validate the updated city's data
+        villeService.validateVille(existingVille, departement);
+
+        // Save the updated city in the database
+        villeRepository.save(existingVille);
+
+        // Return a response with OK status and confirmation message
+        return ResponseEntity.status(HttpStatus.OK).body("La ville a été mise à jour avec succès.");
     }
 
     // Deletes the city from the DB

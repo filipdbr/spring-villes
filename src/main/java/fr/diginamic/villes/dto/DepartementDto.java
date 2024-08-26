@@ -5,7 +5,7 @@ public class DepartementDto {
     // attributs given in the task
 
     private String codeDepartement;
-    private Integer nomDepartement;
+    private String nomDepartement;
     private long nbHabitants;
 
     // getters and setters
@@ -18,11 +18,11 @@ public class DepartementDto {
         this.codeDepartement = codeDepartement;
     }
 
-    public Integer getNomDepartement() {
+    public String getNomDepartement() {
         return nomDepartement;
     }
 
-    public void setNomDepartement(Integer nomDepartement) {
+    public void setNomDepartement(String nomDepartement) {
         this.nomDepartement = nomDepartement;
     }
 

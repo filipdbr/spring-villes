@@ -35,7 +35,6 @@ public class DepartementContoleur {
     // Get all departments (READ)
     @GetMapping
     public Iterable<Departement> getDepartments() {
-
         return departementRepository.findAll();
     }
 
@@ -56,11 +55,28 @@ public class DepartementContoleur {
         return ResponseEntity.status(HttpStatus.CREATED).body("Département créé avec succès");
     }
 
-    // Updates a department (UPDATE)
-    @PutMapping("/update")
-    public void updateDepartement(@RequestParam int id, @RequestBody Departement departement) {
-        departementService.updateDepartement(id, departement);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateDepartement(@PathVariable int id, @RequestBody DepartementDto departementDto) throws InvalidDepartementException {
+
+        // Validate the department data
+        departementService.validateDepartement(departementDto);
+
+        // Find the existing department by its ID
+        Departement departement = departementRepository.findById(id).orElseThrow(() -> new InvalidDepartementException("Le département n'existe pas."));
+
+        // Update department name
+        departement.setNomDepartement(departementDto.getNomDepartement());
+
+        // Clear the current list of cities (if this is the behavior you want)
+        departement.getVilles().clear();
+
+        // Save the updated department along with its cities
+        departementRepository.save(departement);
+
+        // Return success message
+        return ResponseEntity.status(HttpStatus.OK).body("Département mis à jour avec succès.");
     }
+
 
     // Deletes a departement (DELETE)
     @DeleteMapping
@@ -70,12 +86,12 @@ public class DepartementContoleur {
 
     // get n largest cities in the department
     @GetMapping("/{codeRegion}/villes/top/{n}")
-    public List<Ville> getTopNCities(@PathVariable int codeRegion, @PathVariable int n) {
+    public List<Ville> getTopNCities(@PathVariable String codeRegion, @PathVariable int n) {
         return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeRegion, Pageable.ofSize(n));
     }
 
     @GetMapping("/{codeRegion}/villes")
-    public Iterable<Ville> getCitiesBetween(@PathVariable int codeRegion, @RequestParam int min, @RequestParam int max) {
+    public Iterable<Ville> getCitiesBetween(@PathVariable String codeRegion, @RequestParam int min, @RequestParam int max) {
         return villeRepository.findByDepartement_CodeDepartementAndNbHabitantsBetween(codeRegion, min, max);
     }
 

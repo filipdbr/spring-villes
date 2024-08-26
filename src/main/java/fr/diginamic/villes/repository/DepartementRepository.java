@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DepartementRepository extends CrudRepository<Departement, Integer> {
 
-    Departement findByNomDepartement(Integer nomDepartement);
+    Departement findByNomDepartement(String nomDepartement);
 
 }

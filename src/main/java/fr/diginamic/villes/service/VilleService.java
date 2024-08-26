@@ -44,7 +44,7 @@ public class VilleService {
         }
 
         // in my case code_departement is an integer as it may be
-        if (ville.getDepartement().getId().length() != 2) {
+        if (ville.getDepartement().getCodeDepartement().length() != 2) {
             throw new InvalidVilleException("Le code département doit obligatoire 2 caractères");
         }
 

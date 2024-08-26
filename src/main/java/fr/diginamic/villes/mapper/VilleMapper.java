@@ -20,7 +20,7 @@ public class VilleMapper {
         // Convert the associated department to DTO
         if (ville.getDepartement() != null) {
             DepartementDto departementDto = new DepartementDto();
-            departementDto.setCodeDepartement(ville.getDepartement().getId());
+            departementDto.setCodeDepartement(ville.getDepartement().getCodeDepartement());
             departementDto.setNomDepartement(ville.getDepartement().getNomDepartement());
         }
 
