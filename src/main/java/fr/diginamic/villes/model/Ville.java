@@ -23,8 +23,7 @@ public class Ville {
     private long nbHabitants;
 
     @ManyToOne
-    @JoinColumn(name="code_departement", nullable = false)
-    // jsonbackref necessary to avoid an infinite loop. This will be visible
+    @JoinColumn(name="code_departement", referencedColumnName = "code_departement", nullable = false)
     @JsonBackReference
     private Departement departement;
 

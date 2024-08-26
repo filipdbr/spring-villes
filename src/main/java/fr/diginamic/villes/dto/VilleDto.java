@@ -6,7 +6,7 @@ public class VilleDto {
 
     private Integer codeVille;
     private long nbHabitants;
-    private Integer codeDepartement;
+    private String codeDepartement;
     private String nomDepartement;
 
     // getters and setters
@@ -27,11 +27,11 @@ public class VilleDto {
         this.nbHabitants = nbHabitants;
     }
 
-    public Integer getCodeDepartement() {
+    public String getCodeDepartement() {
         return codeDepartement;
     }
 
-    public void setCodeDepartement(Integer codeDepartement) {
+    public void setCodeDepartement(String codeDepartement) {
         this.codeDepartement = codeDepartement;
     }
 

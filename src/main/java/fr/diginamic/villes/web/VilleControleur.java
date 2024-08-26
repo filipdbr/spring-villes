@@ -13,11 +13,14 @@ import fr.diginamic.villes.service.VilleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // Rest controller returns an object or a list of objects in form of a JSON
 // This will work with a URL finishing with /villes
@@ -86,53 +89,73 @@ public class VilleControleur {
         return villeRepository.findByDepartement_CodeDepartementOrderByNbHabitantsDesc(codeDepartement, pageable);
     }
 
+    @GetMapping("/export-csv")
+    public ResponseEntity<String> exportVillesToCsv() {
+        Iterable<Ville> villesIterable = villeRepository.findAll();
+
+        // Convertir l'Iterable en List pour faciliter les opérations
+        List<Ville> villes = new ArrayList<>();
+        villesIterable.forEach(villes::add);  // Ajout de chaque élément de l'iterable à la liste
+
+        // Générer le contenu du fichier CSV
+        String csvContent = villes.stream()
+                .map(ville -> ville.getNom() + "," + ville.getNbHabitants() + "," + ville.getDepartement().getCodeDepartement() + "," + ville.getDepartement().getNomDepartement())
+                .collect(Collectors.joining("\n"));
+
+        // Ajouter un en-tête CSV
+        String csvHeader = "Nom de la ville,Nombre d'habitants,Code département,Nom du département\n";
+
+        String fullCsv = csvHeader + csvContent;
+
+        // Configurer les en-têtes HTTP pour forcer le téléchargement du fichier CSV
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=villes.csv");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(fullCsv);
+    }
+
     // Creates a city in the DB
     @PostMapping
     public ResponseEntity<?> creerVille(@RequestBody VilleDto villeDto) throws InvalidVilleException {
-        // Finding the department by its identifier (codeDepartement)
-        Departement departement = departementRepository.findById(villeDto.getCodeDepartement())
+
+        // searching by codeDepartement
+        Departement departement = departementRepository.findByCodeDepartement(villeDto.getCodeDepartement())
                 .orElseThrow(() -> new InvalidVilleException("Le département n'existe pas."));
 
-        // Mapping the Departement object to DepartementDto to use it for creating Ville
         DepartementDto departementDto = DepartementMapper.toDto(departement);
-
-        // Creating a new Ville object from VilleDto and the mapped department
         Ville ville = VilleMapper.toBean(villeDto, departementDto);
-
-        // Validating the city's data
         villeService.validateVille(ville, departement);
-
-        // Saving the city in the database
         villeRepository.save(ville);
 
-        // Returning a response with CREATED status and confirmation message
         return ResponseEntity.status(HttpStatus.CREATED).body("La ville a été créée avec succès.");
     }
+
 
     // Updates a city in the DB
     @PutMapping("/{id}")
     public ResponseEntity<?> updateVille(@PathVariable Integer id, @RequestBody VilleDto villeDto) throws InvalidVilleException {
-        // Find the existing city by its ID
+
+        // Searching by ID
         Ville existingVille = villeRepository.findById(id)
                 .orElseThrow(() -> new InvalidVilleException("La ville n'existe pas."));
 
-        // Find the department by its ID (codeDepartement) from the VilleDto
-        Departement departement = departementRepository.findById(villeDto.getCodeDepartement())
+        // Finding departemnt by codeDepartement
+        Departement departement = departementRepository.findByCodeDepartement(villeDto.getCodeDepartement())
                 .orElseThrow(() -> new InvalidVilleException("Le département n'existe pas."));
 
-        // Map the VilleDto to Ville entity and update the existing city
+        // Update
         existingVille.setNbHabitants(villeDto.getNbHabitants());
-        existingVille.setDepartement(departement); // Update the department reference
+        existingVille.setDepartement(departement); // Zaktualizuj referencję do departamentu
 
-        // Validate the updated city's data
+        // Validation and save
         villeService.validateVille(existingVille, departement);
-
-        // Save the updated city in the database
         villeRepository.save(existingVille);
 
-        // Return a response with OK status and confirmation message
         return ResponseEntity.status(HttpStatus.OK).body("La ville a été mise à jour avec succès.");
     }
+
 
     // Deletes the city from the DB
     @DeleteMapping

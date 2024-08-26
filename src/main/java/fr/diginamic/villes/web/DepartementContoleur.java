@@ -11,11 +11,14 @@ import fr.diginamic.villes.service.DepartementService;
 import fr.diginamic.villes.service.VilleService;
 import org.apache.coyote.Response;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/departements")
@@ -36,6 +39,33 @@ public class DepartementContoleur {
     @GetMapping
     public Iterable<Departement> getDepartments() {
         return departementRepository.findAll();
+    }
+
+    @GetMapping("/export-csv")
+    public ResponseEntity<String> exportDepartementsToCsv() {
+        Iterable<Departement> departementsIterable = departementRepository.findAll();
+
+        // Convertir l'Iterable en List pour faciliter les opérations
+        List<Departement> departements = new ArrayList<>();
+        departementsIterable.forEach(departements::add);  // Ajout de chaque élément de l'iterable à la liste
+
+        // Générer le contenu du fichier CSV
+        String csvContent = departements.stream()
+                .map(departement -> departement.getCodeDepartement() + "," + departement.getNomDepartement())
+                .collect(Collectors.joining("\n"));
+
+        // Ajouter un en-tête CSV
+        String csvHeader = "Code département,Nom du département\n";
+
+        String fullCsv = csvHeader + csvContent;
+
+        // Configurer les en-têtes HTTP pour forcer le téléchargement du fichier CSV
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=departements.csv");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(fullCsv);
     }
 
     // Create a department (CREATE)

@@ -12,9 +12,6 @@ public class Departement {
 
     // Primary key with auto-increment
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @Column(name="code_departement")
     private String codeDepartement;
 
@@ -39,14 +36,6 @@ public class Departement {
     }
 
     // Getters and setters for codeDepartement
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCodeDepartement() {
         return codeDepartement;
